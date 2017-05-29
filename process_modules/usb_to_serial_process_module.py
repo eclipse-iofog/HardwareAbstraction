@@ -1,10 +1,11 @@
-import serial
-import serial.tools.list_ports
 import json
 import threading
 
-from process_modules_templates import WSRequestProcessModule, RESTRequestProcessModule
+import serial
+import serial.tools.list_ports
+
 from constants import *
+from process_modules.process_modules_templates import WSRequestProcessModule, RESTRequestProcessModule
 
 
 class WSUSBSerialProcessModule(WSRequestProcessModule):

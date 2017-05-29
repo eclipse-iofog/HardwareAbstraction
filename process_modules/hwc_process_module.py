@@ -7,11 +7,11 @@ Process module and a wrapper around common Linux commands to check hardware info
 - lsusb
 """
 
-from process_modules_templates import RESTRequestProcessModule
-from constants import *
-
 import json
 from subprocess import check_output
+
+from constants import *
+from process_modules.process_modules_templates import RESTRequestProcessModule
 
 
 class HWCRESTRequestProcessModule(RESTRequestProcessModule):

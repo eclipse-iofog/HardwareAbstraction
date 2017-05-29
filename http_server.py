@@ -1,9 +1,10 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from process_modules.usb_to_serial_process_module import RESTUSBSerialProcessModule
+
 from constants import *
-from usb_to_serial_process_module import RESTUSBSerialProcessModule
-from hwc_process_module import HWCRESTRequestProcessModule
+from process_modules.hwc_process_module import HWCRESTRequestProcessModule
 
 
 class HALRESTServer:

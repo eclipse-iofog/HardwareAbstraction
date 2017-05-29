@@ -1,10 +1,11 @@
 import asyncio
 import json
-from autobahn.asyncio.websocket import WebSocketServerProtocol, WebSocketServerFactory
 from struct import pack
 
+from autobahn.asyncio.websocket import WebSocketServerProtocol, WebSocketServerFactory
+
 from constants import *
-from usb_to_serial_process_module import WSUSBSerialProcessModule
+from process_modules.usb_to_serial_process_module import WSUSBSerialProcessModule
 
 
 class HALWSServer:
