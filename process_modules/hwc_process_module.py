@@ -31,8 +31,7 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
         return
 
     def _get_lscpu_info(self):
-        cmd_result = self._run_cmd(LSCPU_CMD)
-        return cmd_result
+        return self.process_lscpu_result(self._run_cmd(LSCPU_CMD))
 
     def _get_lspci_info(self):
         cmd_result = self._run_cmd(LSPCI_CMD)
@@ -43,9 +42,43 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
         return cmd_result
 
     def _get_lsusb_info(self):
-        cmd_result = self._run_cmd(LSUSB_CMD)
-        return cmd_result
+        return self.process_lsusb_result(self._run_cmd(LSUSB_CMD))
 
     @staticmethod
     def _run_cmd(cmd):
         return check_output(cmd)
+
+    @staticmethod
+    def process_lsusb_result(result):
+        processed_result = []
+        lines = result.splitlines()
+        for line in lines:
+            tokens = line.split()
+            if len(tokens) < 7:
+                print('Not enough info.')
+            else:
+                id_tokens = tokens[5].split(b':')
+                name = b' '.join(tokens[6:])
+                element = {
+                    HAL_LSUSB_BUS_NUMBER_PROPERTY_NAME: tokens[1],
+                    HAL_LSUSB_DEVICE_NUMBER_PROPERTY_NAME: tokens[3][:-1],
+                    HAL_LSUSB_MANUFACTURE_ID_PROPERTY_NAME: id_tokens[0],
+                    HAL_LSUSB_DEVICE_ID_PROPERTY_NAME: id_tokens[1],
+                    HAL_LSUSB_MANUFACTURE_AND_DEVICE_NAME_PROPERTY_NAME: name
+                }
+                processed_result.append(element)
+        return processed_result
+
+    @staticmethod
+    def process_lscpu_result(result):
+        processed_result = []
+        lines = result.splitlines()
+        for line in lines:
+            tokens = line.split(b':')
+            if len(tokens) < 2:
+                print('Not enough info.')
+            else:
+                processed_result.append(tokens[1])
+        # TODO: should we handle multiple languages ?
+        return {}
+
