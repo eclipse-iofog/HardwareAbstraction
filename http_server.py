@@ -48,7 +48,7 @@ class HALRESTHandler(BaseHTTPRequestHandler):
 
     def send_error_response(self, response_body):
         print('Sending error response: {}'.format(response_body))
-        self._build_response(ERROR_HTTP_RESPONSE_CODE, response_body)
+        self._build_response(ERROR_HTTP_RESPONSE_CODE, json.dumps(response_body))
 
     def _build_response(self, status_code, response_body):
         self.send_response(status_code)
@@ -57,9 +57,9 @@ class HALRESTHandler(BaseHTTPRequestHandler):
         if isinstance(response_body, bytearray):
             self.wfile.write(bytearray(response_body))
         elif isinstance(response_body, str):
-            #raw_body = bytearray()
-            #raw_body.extend(map(ord, response_body))
-            self.wfile.write(bytearray(json.dumps(response_body).encode()))
+            raw_body = bytearray()
+            raw_body.extend(map(ord, response_body))
+            self.wfile.write(raw_body)
         else:
             print('Response body for HTTP should be represented as bytearray or str.')
         return

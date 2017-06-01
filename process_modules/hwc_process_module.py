@@ -47,16 +47,16 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
         lines = result.splitlines()
         for line in lines:
             tokens = line.split()
-            if len(tokens) >= 7:
+            if len(tokens) >= 6:
                 id_tokens = tokens[5].split(':')
-                name = ' '.join(tokens[6:])
                 element = {
                     HAL_LSUSB_BUS_NUMBER_PROPERTY_NAME: tokens[1],
                     HAL_LSUSB_DEVICE_NUMBER_PROPERTY_NAME: tokens[3][:-1],
                     HAL_LSUSB_MANUFACTURE_ID_PROPERTY_NAME: id_tokens[0],
-                    HAL_LSUSB_DEVICE_ID_PROPERTY_NAME: id_tokens[1],
-                    HAL_LSUSB_MANUFACTURE_AND_DEVICE_NAME_PROPERTY_NAME: name
+                    HAL_LSUSB_DEVICE_ID_PROPERTY_NAME: id_tokens[1]
                 }
+                if len(tokens) > 6:
+                    element[HAL_LSUSB_MANUFACTURE_AND_DEVICE_NAME_PROPERTY_NAME] = ' '.join(tokens[6:])
                 processed_result.append(element)
         return processed_result
 
