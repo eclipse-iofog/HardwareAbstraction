@@ -57,11 +57,10 @@ class HALRESTHandler(BaseHTTPRequestHandler):
         if isinstance(response_body, bytearray):
             self.wfile.write(bytearray(response_body))
         elif isinstance(response_body, str):
-            raw_body = bytearray()
-            raw_body.extend(map(ord, response_body))
-            self.wfile.write(bytearray(raw_body))
+            #raw_body = bytearray()
+            #raw_body.extend(map(ord, response_body))
+            self.wfile.write(bytearray(json.dumps(response_body).encode()))
         else:
-            # dump else
             print('Response body for HTTP should be represented as bytearray or str.')
         return
 
