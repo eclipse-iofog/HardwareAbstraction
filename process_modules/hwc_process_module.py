@@ -47,7 +47,7 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
             message = ''
             if os.uname()[4].startswith('arm'):
                 message += 'ARM might not support this command: \'{}\'. '.format(cmd)
-            message += e.args[1])
+            message += e.args[1]
             raise HALException(e.args[0], message)
 
     @staticmethod
