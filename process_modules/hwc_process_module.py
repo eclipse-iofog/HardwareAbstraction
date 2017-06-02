@@ -45,10 +45,10 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
             return check_output(cmd).decode()
         except Exception as e:
             message = ''
-            if os. uname()[4].startswith('arm'):
+            if os.uname()[4].startswith('arm'):
                 message += 'ARM might not support this command: \'{}\'. '.format(cmd)
             message += e.read()
-            raise HALException(e.code, message)
+            raise HALException(e.args[0], e.args[1])
 
     @staticmethod
     def get_lsusb_info():
