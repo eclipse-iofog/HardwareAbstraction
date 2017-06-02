@@ -11,7 +11,7 @@ Process module and a wrapper around common Linux commands to check hardware info
 import json
 import re
 import os
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError, STDOUT
 
 from constants import *
 from process_modules.process_modules_templates import RESTRequestProcessModule
@@ -42,13 +42,11 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
     @staticmethod
     def _run_cmd(cmd):
         try:
-            return check_output(cmd).decode()
+            return check_output(cmd, stderr=STDOUT).decode()
         except Exception as e:
-            message = ''
-            if os.uname()[4].startswith('arm'):
-                message += 'ARM might not support this command: \'{}\'. '.format(cmd)
-            message += e.args[1]
-            raise HALException(e.args[0], message)
+            raise HALException(message=e)
+        except CalledProcessError as cmd_e:
+            raise HALException(cmd_e.returncode, cmd_e.output.decode())
 
     @staticmethod
     def get_lsusb_info():
