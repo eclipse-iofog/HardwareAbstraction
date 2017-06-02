@@ -6,6 +6,7 @@ import serial.tools.list_ports
 
 from constants import *
 from process_modules.process_modules_templates import WSRequestProcessModule, RESTRequestProcessModule
+from exception import HALException
 
 
 class WSUSBSerialProcessModule(WSRequestProcessModule):
@@ -113,7 +114,7 @@ class RESTUSBSerialProcessModule(RESTRequestProcessModule):
             list = self._list_to_json(serial.tools.list_ports.comports())
             http_handler.send_ok_response(json.dumps(list))
         else:
-            http_handler.send_error_response('This url is not supported: ' + http_handler.path)
+            raise HALException(message='This url is not supported: {}'.format(http_handler.path))
         return
 
     @staticmethod

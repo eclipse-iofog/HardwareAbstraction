@@ -5,6 +5,7 @@ from process_modules.usb_to_serial_process_module import RESTUSBSerialProcessMod
 
 from constants import *
 from process_modules.hwc_process_module import HWCRESTRequestProcessModule
+from exception import HALException
 
 
 class HALRESTServer:
@@ -29,7 +30,10 @@ class HALRESTHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         # self.headers.dict['content-type']
-        self._get_request_process_module().process_get_request(self)
+        try:
+            self._get_request_process_module().process_get_request(self)
+        except HALException as hal_e:
+            self.send_error_response(hal_e.to_json())
         return
 
     def do_POST(self):
@@ -37,7 +41,9 @@ class HALRESTHandler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
             self._get_request_process_module().process_post_request(self, data)
         except Exception as e:
-            self.send_error_response('Error parsing json body: {}'.format(e))
+            if not isinstance(e, HALException):
+                e = HALException(e.code, 'Error parsing json body: {}'.format(e.read))
+            self.send_error_response(e.to_json())
         return
 
     def send_ok_response(self, response_body):
@@ -47,8 +53,9 @@ class HALRESTHandler(BaseHTTPRequestHandler):
         self._build_response(NOT_FOUND_HTTP_RESPONSE_CODE, response_body)
 
     def send_error_response(self, response_body):
-        print('Sending error response: {}'.format(response_body))
-        self._build_response(ERROR_HTTP_RESPONSE_CODE, json.dumps(response_body))
+        response_body_str = json.dumps(response_body)
+        print('Sending error response: {}'.format(response_body_str))
+        self._build_response(ERROR_HTTP_RESPONSE_CODE, response_body_str)
 
     def _build_response(self, status_code, response_body):
         self.send_response(status_code)
@@ -75,8 +82,9 @@ class HALRESTHandler(BaseHTTPRequestHandler):
         elif HAL_HWC_BASE_URL in self.path:
             self.process_module = HWCRESTRequestProcessModule()
         else:
-            self.send_error_response('This url is not supported: {}'.format(self.path))
+            raise HALException(message='This url is not supported: {}'.format(self.path))
         return self.process_module
+
 
 if __name__ == '__main__':
     # to DEBUG separately

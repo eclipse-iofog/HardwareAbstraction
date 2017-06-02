@@ -3,10 +3,10 @@ FROM frolvlad/alpine-python3
 # for rpi
 #FROM armhf/alpine
 
-#RUN apk add --no-cache python && \
-#    python -m ensurepip && \
+#RUN apk add --no-cache python3 && \
+#    python3 -m ensurepip && \
 #    rm -r /usr/lib/python*/ensurepip && \
-#    pip install --upgrade pip setuptools && \
+#    pip3 install --upgrade pip setuptools && \
 #    rm -r /root/.cache
 RUN apk add --update util-linux pciutils lshw
 RUN pip install --upgrade pip

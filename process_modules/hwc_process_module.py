@@ -10,10 +10,12 @@ Process module and a wrapper around common Linux commands to check hardware info
 
 import json
 import re
+import os
 from subprocess import check_output
 
 from constants import *
 from process_modules.process_modules_templates import RESTRequestProcessModule
+from exception import HALException
 
 
 class HWCRESTRequestProcessModule(RESTRequestProcessModule):
@@ -31,14 +33,22 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
         elif HAL_HWC_GET_LSUSB_INFO_PATH in http_handler.path:
             response = self.get_lsusb_info()
         else:
-            http_handler.send_error_response('This url is not supported: ' + http_handler.path)
+            message = 'This url is not supported: {}'.format(http_handler.path)
+            raise HALException(message=message)
         if response is not None:
             http_handler.send_ok_response(json.dumps(response))
         return
 
     @staticmethod
     def _run_cmd(cmd):
-        return check_output(cmd).decode()
+        try:
+            return check_output(cmd).decode()
+        except Exception as e:
+            message = ''
+            if os. uname()[4].startswith('arm'):
+                message += 'ARM might not support this command: \'{}\'. '.format(cmd)
+            message += e.read()
+            raise HALException(e.code, message)
 
     @staticmethod
     def get_lsusb_info():
