@@ -10,7 +10,6 @@ Process module and a wrapper around common Linux commands to check hardware info
 
 import json
 import re
-import os
 from subprocess import check_output, CalledProcessError, STDOUT
 
 from constants import *
@@ -43,10 +42,10 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
     def _run_cmd(cmd):
         try:
             return check_output(cmd, stderr=STDOUT).decode()
-        except Exception as e:
-            raise HALException(message=e)
         except CalledProcessError as cmd_e:
             raise HALException(cmd_e.returncode, cmd_e.output.decode())
+        except Exception as e:
+            raise HALException(message=str(e))
 
     @staticmethod
     def get_lsusb_info():
