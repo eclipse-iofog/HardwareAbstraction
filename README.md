@@ -407,7 +407,7 @@ REST server listens on port 54331.
          }
        ] </pre>
 #### LSHW info (GET)
- Returns parsed info of 'lscpu' command
+ Returns parsed info of 'lshw' command
  <pre> http://localhost:54331/hal/hwc/lshw </pre>
  Response example
  <pre> {
@@ -2085,7 +2085,7 @@ All available configuration properties:
 - 'dsrdtr'
 - 'write_timeout'
 - 'inter_byte_timeout'
-Example: 
+> Example: 
 <pre>
     { 'port': '/dev/ttyUSB0' }
 </pre>
