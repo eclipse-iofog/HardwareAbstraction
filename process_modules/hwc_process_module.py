@@ -98,7 +98,7 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
                                 property_name = 'processor_number'
                             else:
                                 property_name = property_tokens[0].replace(' ', '_')
-                            processor_info[property_name] = property_tokens[1]
+                            processor_info[property_name] = property_tokens[1].strip()
                 processed_result.append(processor_info)
         return processed_result
 
@@ -109,13 +109,15 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
         lines = result.splitlines()
         for line in lines:
             tokens = line.split('"')
-            if len(tokens) >= 10:
+            if len(tokens) >= 6:
                 element = {}
-                numbers = re.findall('\d+', tokens[0])
-                if len(numbers) == 3:
+                numbers = tokens[0].split(':')
+                if len(numbers) == 2:
                     element[HAL_LSPCI_BUS_NUMBER_PROPERTY_NAME] = numbers[0]
-                    element[HAL_LSPCI_DEVICE_NUMBER_PROPERTY_NAME] = numbers[1]
-                    element[HAL_LSPCI_FUNCTION_NUMBER_PROPERTY_NAME] = numbers[2]
+                    sub_numbers = numbers[1].split('.')
+                    if len(sub_numbers) == 2:
+                        element[HAL_LSPCI_DEVICE_NUMBER_PROPERTY_NAME] = sub_numbers[0]
+                        element[HAL_LSPCI_FUNCTION_NUMBER_PROPERTY_NAME] = sub_numbers[1]
                 class_props = tokens[1].split('[')
                 if len(class_props) == 2:
                     element[HAL_LSPCI_DEVICE_CLASS_PROPERTY_NAME] = class_props[0]
@@ -128,7 +130,7 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
                 if len(device_props) == 2:
                     element[HAL_LSPCI_DEVICE_NAME_PROPERTY_NAME] = device_props[0]
                     element[HAL_LSPCI_DEVICE_ID_PROPERTY_NAME] = device_props[1][:-1]
-                element[HAL_LSPCI_REVISION_NUMBER_PROPERTY_NAME] = tokens[9][2:]
+                element[HAL_LSPCI_REVISION_NUMBER_PROPERTY_NAME] = tokens[6][3:]
                 processed_result.append(element)
         return processed_result
 
@@ -139,5 +141,4 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
             response = json.loads(result)
             return response
         except Exception as e:
-            print('Exception parsing \'lshw -json\' results to json object: {}'.format(e))
-            return ''
+            raise HALException(e.code, message='Exception parsing \'lshw -json\' cmd results to json object: {}'.format(e))
