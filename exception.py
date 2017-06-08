@@ -12,4 +12,4 @@ class HALException(HALBaseException):
         return 'Error code: {}, reason: {}'.format(self.code, self.message)
 
     def to_json(self):
-        return {'code': self.code, 'reason': self.message }
+        return {'code': self.code, 'reason': self.message}

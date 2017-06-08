@@ -42,7 +42,7 @@ class HALRESTHandler(BaseHTTPRequestHandler):
             self._get_request_process_module().process_post_request(self, data)
         except Exception as e:
             if not isinstance(e, HALException):
-                e = HALException(e.code, 'Error parsing json body: {}'.format(e.read))
+                e = HALException('Error parsing json body: {}'.format(e))
             self.send_error_response(e.to_json())
         return
 

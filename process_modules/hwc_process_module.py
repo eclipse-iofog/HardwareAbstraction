@@ -141,4 +141,4 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
             response = json.loads(result)
             return response
         except Exception as e:
-            raise HALException(e.code, message='Exception parsing \'lshw -json\' cmd results to json object: {}'.format(e))
+            raise HALException(message='Exception parsing \'lshw -json\' cmd results to json object: {}'.format(e))
