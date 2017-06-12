@@ -3,8 +3,9 @@ HAL stands for Hardware Abstraction Layer. It's REST/WS abstraction for hardware
 machines.
  
 > ##### Prerequisites:
-> as Docker container, it needs to be run with next options to grant access (or under root user): 
+> as Docker container, it needs to be run with next options to grant access: 
 > <pre> --net=host --privileged </pre>
+> in other cases it needs to start under root user
  
 ### REST
 REST server listens on port 54331. 
@@ -2019,9 +2020,7 @@ WS server listens on port 54332.
 
 This endpoint opens a message Web-socket connection to USB-to-Serial device. The messages and other commands sent 
 over this Web-socket are specified here. It is the responsibility of the container to establish this connection 
-and ensure it is always running. If the container loses the Websocket connection, it should establish a new 
-connection. The Local API is responsible for knowing which Websocket connection belongs to which container so that 
-it can pass information to the appropriate recipients.
+and ensure it is running. 
 
 The PORT of USB-to-Serial device must be passed as part of the URL because otherwise it would have to be passed in 
 the Web-socket connection itself and that would make associated connections with different devices rather difficult.
@@ -2048,12 +2047,12 @@ the Web-socket connection itself and that would make associated connections with
 ##### Signals from HAL to Client
 
 <pre>
-	- op code 4: single byte command; means connection to device was opened (it's and answer to connection open op 
-	code signal send with configuration for opening connection top physical device); at this point HAL starts 
+	- op code 4: (single byte command) indicates connection to device was opened (it's an answer to connection open op 
+	code signal sent with configuration for opening connection to physical device); at this point HAL starts 
 	listening on data from connected device.
-	- op code 6: means that HAL recieved some data from physical device (op code single byte followed 4 bytes 
-	indicating the length of the response by pure bytes of data recieved from device)
-	- standart close frame: means that current connection was closed. 
+	- op code 6: indicates that HAL recieved some data from physical device (op code single byte followed by pure bytes 
+	of data recieved from device)
+	- standart close frame: indicates that current connection was closed. 
 	    > status code 1000 with close frame : means that device normally closed connection
 	    > status code 4000 with close frame : there was an exception, error will be passed in reason. 
 </pre>
@@ -2061,20 +2060,19 @@ the Web-socket connection itself and that would make associated connections with
 ##### Signals from Client to HAL
 
 <pre>
-    - op code 3: signals HAL to open connection to device with specified configuration in passed data (op code 
-    single byte followed by 4 bytes indicating the length of data and followed by bytes of json configuration to 
-    open connection to device ); in case with USB-to-Serial: PORT proprty is required.
-    - op code 5: this signals HAL to send recived data to connected device (op code single byte followed 4 bytes 
-    indicating the length of the data to send and followed by pure bytes of data to send to device) 
-    code signal send with configuration for opening connection top physical device)
-    - standart close frame: means that client wants to close current connection. 
+    - op code 3: signals HAL to open connection to device with specified configuration in passed data (op code single 
+    byte followed by bytes of json configuration to open connection to device ); in case with USB-to-Serial: PORT 
+    property is required.
+    - op code 5: signals HAL to send recieved data to connected device (op code single byte followed by pure bytes of 
+    data to send to device) 
+    - standart close frame: indicates that client wants to close current connection. 
         > status code 1000 with close frame : means that device normally closed connection
     	> status code 4000 with close frame : there was an exception, error will be passed in reason. 	
 </pre>
 
 ###### JSON Configuration for USB-to-Serial device 
 All available configuration properties:
-- 'port' (required to open connection)
+- 'port'(required to open connection)
 - 'baudrate'
 - 'bytesize'
 - 'parity'
@@ -2085,6 +2083,7 @@ All available configuration properties:
 - 'dsrdtr'
 - 'write_timeout'
 - 'inter_byte_timeout'
+- 'data_read_timeout'(this property tells HAL to pause for specified timeout in seconds before reading data from buffer)
 > Example: 
 <pre>
     { 'port': '/dev/ttyUSB0' }

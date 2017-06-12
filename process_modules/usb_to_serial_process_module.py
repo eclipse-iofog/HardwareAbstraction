@@ -1,5 +1,6 @@
 import json
 import threading
+from time import sleep
 
 import serial
 import serial.tools.list_ports
@@ -15,6 +16,7 @@ class WSUSBSerialProcessModule(WSRequestProcessModule):
         self.serialUSB = None
         self.listener_worker = None
         self.ws_server = ws_server
+        self.data_read_timeout = HAL_USB_TO_SERIAL_DATA_READ_TIMEOUT_DEFAULT_VALUE
 
     def handle_open_connection(self):
         self.alive = True
@@ -66,6 +68,8 @@ class WSUSBSerialProcessModule(WSRequestProcessModule):
 
     def _listen_to_incoming_data(self):
         while self.alive:
+            if self.data_read_timeout > 0:
+                sleep(self.data_read_timeout)
             data = self.serialUSB.read(self.serialUSB.in_waiting or 1)
             if data:
                 self.ws_server.send_got_data(data)
@@ -105,6 +109,9 @@ class WSUSBSerialProcessModule(WSRequestProcessModule):
         # inter_byte_timeout
         if HAL_USB_TO_SERIAL_INTER_BYTE_TIMEOUT_PROPERTY_NAME in config:
             self.serialUSB.inter_byte_timeout = config[HAL_USB_TO_SERIAL_INTER_BYTE_TIMEOUT_PROPERTY_NAME]
+        # data_read_timeout (custom property)
+        if HAL_USB_TO_SERIAL_DATA_READ_TIMEOUT_PROPERTY_NAME in config:
+            self.data_read_timeout = config[HAL_USB_TO_SERIAL_DATA_READ_TIMEOUT_PROPERTY_NAME]
 
 
 class RESTUSBSerialProcessModule(RESTRequestProcessModule):
