@@ -52,7 +52,7 @@ class HALWSProtocol(WebSocketServerProtocol):
                 self._get_process_module().open_connection(config_data)
             elif opcode == HAL_WS_SEND_DATA_OPCODE:
                 print(' OPCODE to send data ')
-                self._get_process_module().send_data(payload[5:])
+                self._get_process_module().send_data(payload[1:])
         else:
             print('Text message received: {0}'.format(payload.decode('utf8')))
 
@@ -87,7 +87,6 @@ class HALWSProtocol(WebSocketServerProtocol):
     def _send_data(self, opcode, message):
         package = bytearray([opcode])
         if message is not None:
-            package.extend(pack('>I', len(message)))
             package.extend(message)
         print('sending data with opcode = {} and message : {}'.format(opcode, message))
         if self.state == WebSocketServerProtocol.STATE_OPEN:
@@ -97,8 +96,7 @@ class HALWSProtocol(WebSocketServerProtocol):
         return
 
     def _read_config(self, data):
-        pure_data = data[5:]
-        # length = data[1:5]
+        pure_data = data[1:]
         try:
             return json.loads(pure_data.decode())
         except Exception as e:

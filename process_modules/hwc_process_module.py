@@ -9,7 +9,6 @@ Process module and a wrapper around common Linux commands to check hardware info
 """
 
 import json
-import re
 from subprocess import check_output, CalledProcessError, STDOUT
 
 from constants import *
