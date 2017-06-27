@@ -2,9 +2,9 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from process_modules.usb_to_serial_process_module import RESTUSBSerialProcessModule
-
-from constants import *
 from process_modules.hwc_process_module import HWCRESTRequestProcessModule
+from process_modules.gpio.rpi_gpio_layer import GPIORPiRESTRequestProcessModule
+from constants import *
 from exception import HALException
 
 
@@ -77,10 +77,12 @@ class HALRESTHandler(BaseHTTPRequestHandler):
         return self.process_module
 
     def _init_process_module(self):
-        if HAL_USB_TO_SERIAL_BASE_PATH in self.path:
+        if HAL_USB_TO_SERIAL_BASE_URL in self.path:
             self.process_module = RESTUSBSerialProcessModule()
         elif HAL_HWC_BASE_URL in self.path:
             self.process_module = HWCRESTRequestProcessModule()
+        elif HAL_GPIO_RPI_BASE_URL in self.path:
+            self.process_module = GPIORPiRESTRequestProcessModule()
         else:
             raise HALException(message='This url is not supported: {}'.format(self.path))
         return self.process_module
