@@ -38,7 +38,7 @@ class HALRESTHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            data = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+            data = json.loads(self.rfile.read(int(self.headers['Content-Length'])).decode('utf-8'))
             self._get_request_process_module().process_post_request(self, data)
         except Exception as e:
             if not isinstance(e, HALException):
