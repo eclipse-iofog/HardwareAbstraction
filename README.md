@@ -8,7 +8,8 @@ machines.
 > in other cases it needs to start under root user
  
 ### REST
-REST server listens on port 54331. 
+REST server listens on port 54331:
+- <a href="https://github.com/iotracks/HAL/blob/gpio_rpi/process_modules/gpio/GPIO_API.md" target="_new">HAL GPIO for RPI API</a>
 
 #### LSCPU info (GET)
  Returns parsed info of 'lscpu' command
