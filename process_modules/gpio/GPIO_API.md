@@ -48,7 +48,7 @@ Response example
 }
 </pre>
 #### Set up GPIO channels (POST)
-Set up a list of GPIO channels to corresponding type
+Set up a list of GPIO channels (number and type properties are mandatory)
 <pre> http://localhost:54331/hal/gpio/rpi/setup </pre>
 POST JSON example
 <pre> 
