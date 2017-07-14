@@ -94,6 +94,11 @@ class GPIORPiRESTRequestProcessModule(RESTRequestProcessModule):
                             GPIO.setup(pin[HAL_GPIO_RPI_SET_UP_PIN_NUMBER_PROPERTY_NAME], pin_type, initial_value, p_u_d)
                         else:
                             GPIO.setup(pin[HAL_GPIO_RPI_SET_UP_PIN_NUMBER_PROPERTY_NAME], pin_type, initial_value)
+                    elif HAL_GPIO_RPI_SET_UP_PIN_PULL_UP_DOWN_PROPERTY_NAME in pin:
+                        p_u_d = GPIO.PUD_UP
+                        if pin[HAL_GPIO_RPI_SET_UP_PIN_PULL_UP_DOWN_PROPERTY_NAME].lower() == 'down':
+                            p_u_d = GPIO.PUD_DOWN
+                        GPIO.setup(pin[HAL_GPIO_RPI_SET_UP_PIN_NUMBER_PROPERTY_NAME], pin_type, p_u_d)
                     else:
                         GPIO.setup(pin[HAL_GPIO_RPI_SET_UP_PIN_NUMBER_PROPERTY_NAME], pin_type)
                 else:
