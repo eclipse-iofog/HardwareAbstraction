@@ -1,4 +1,9 @@
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except Exception as e:
+    print("Error importing RPi.GPIO: {}".format(e))
+    GPIO = None
+
 import json
 import numbers
 
@@ -10,6 +15,7 @@ from exception import HALException
 class GPIORPiRESTRequestProcessModule(RESTRequestProcessModule):
 
     def process_get_request(self, http_handler):
+        self._check_gpio()
         response = None
         if HAL_GPIO_RPI_SET_BCM_MODE_URL in http_handler.path:
             response = self._set_mode()
@@ -23,6 +29,7 @@ class GPIORPiRESTRequestProcessModule(RESTRequestProcessModule):
         return
 
     def process_post_request(self, http_handler, data):
+        self._check_gpio()
         response = None
         if HAL_GPIO_RPI_SET_UP_PINS_URL in http_handler.path:
             response = self._set_up_pins(data)
@@ -43,6 +50,11 @@ class GPIORPiRESTRequestProcessModule(RESTRequestProcessModule):
         if response is not None:
             http_handler.send_ok_response(json.dumps(response))
         return
+
+    @staticmethod
+    def _check_gpio():
+        if GPIO is None:
+            raise HALException(message='GPIO module runs only on RaspberryPi. Or look at the logs.')
 
     @staticmethod
     def _cleanup_gpio(data=None):
