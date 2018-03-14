@@ -59,7 +59,7 @@ CPU_INFO = 'cpuinfo'
 # HWC full commands to run
 LSCPU_CMD = [LSCPU]
 LSPCI_CMD = [LSPCI, '-nnmm']
-LSHW_CMD = [LSHW, '-disable SCSI -json']
+LSHW_CMD = [LSHW, '-disable', 'scsi', '-json']
 LSUSB_CMD = [LSUSB]
 CPU_INFO_CMD = ['cat', PROC.format(CPU_INFO)]
 
