@@ -127,7 +127,7 @@ class WSUSBSerialProcessModule(WSRequestProcessModule):
 class RESTUSBSerialProcessModule(RESTRequestProcessModule):
 
     def process_get_request(self, http_handler):
-        if HAL_USB_TO_SERIAL_GET_LIST_PATH in http_handler.path:
+        if HAL_USB_TO_SERIAL_GET_LIST_URL in http_handler.path:
             list = self._list_to_json(serial.tools.list_ports.comports())
             http_handler.send_ok_response(json.dumps(list))
         else:

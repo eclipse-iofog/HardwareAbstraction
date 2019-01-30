@@ -30,15 +30,15 @@ class HWCRESTRequestProcessModule(RESTRequestProcessModule):
 
     def process_get_request(self, http_handler):
         response = None
-        if HAL_HWC_GET_LSCPU_INFO_PATH in http_handler.path:
+        if HAL_HWC_GET_LSCPU_INFO_URL in http_handler.path:
             response = self.get_lscpu_info()
-        elif HAL_HWC_GET_LSPCI_INFO_PATH in http_handler.path:
+        elif HAL_HWC_GET_LSPCI_INFO_URL in http_handler.path:
             response = self.get_lspci_info()
-        elif HAL_HWC_GET_CPU_INFO_PATH in http_handler.path:
+        elif HAL_HWC_GET_CPU_INFO_URL in http_handler.path:
             response = self.get_proc_cpu_info_info()
-        elif HAL_HWC_GET_LSHW_INFO_PATH in http_handler.path:
+        elif HAL_HWC_GET_LSHW_INFO_URL in http_handler.path:
             response = self.get_lshw_info()
-        elif HAL_HWC_GET_LSUSB_INFO_PATH in http_handler.path:
+        elif HAL_HWC_GET_LSUSB_INFO_URL in http_handler.path:
             response = self.get_lsusb_info()
         else:
             message = 'This url is not supported: {}'.format(http_handler.path)

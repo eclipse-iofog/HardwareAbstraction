@@ -88,7 +88,7 @@ class HALWSProtocol(WebSocketServerProtocol):
         return self.process_module
 
     def _init_process_module(self, request):
-        if HAL_USB_TO_SERIAL_BASE_PATH in request.path:
+        if HAL_USB_TO_SERIAL_BASE_URL in request.path:
             self.process_module = WSUSBSerialProcessModule(self)
         else:
             msg = 'This url is not supported: {}'.format(request.path)
