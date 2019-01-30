@@ -9,7 +9,7 @@ machines.
  
 ### REST
 REST server listens on port 54331:
-- <a href="https://github.com/iotracks/HAL/blob/gpio_rpi/process_modules/gpio/GPIO_API.md" target="_new">HAL GPIO for RPI API</a>
+- <a href="https://github.com/iofog/HardwareAbstraction/blob/master/process_modules/gpio/GPIO_API.md" target="_new">HAL GPIO for RPI API</a>
 
 #### LSCPU info (GET)
  Returns parsed info of 'lscpu' command
