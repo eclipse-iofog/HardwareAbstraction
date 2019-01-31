@@ -1,4 +1,4 @@
-# GPIO abstaction
+# GPIO Abstraction
 GPIO abstraction is intended to easy the use of GPIO on any language. 
 
 As a part of HAL REST server it listens on port 54331 under 'gpio' path. 
