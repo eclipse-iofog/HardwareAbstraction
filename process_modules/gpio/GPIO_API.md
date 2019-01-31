@@ -49,9 +49,7 @@ Response example
 </pre>
 #### Set up GPIO channels (POST)
 Set up a list of GPIO channels (number and type properties are mandatory)
-<pre> http://localhost:54331/hal/gpio/rpi/setup </pre>
-POST JSON example
-<pre> 
+<pre>  
 curl -d '[
       {
       "number": 1,
@@ -72,8 +70,17 @@ curl -d '[
       "number": 4,
       "type": "out"
   }
-]' http://localhost:54331/hal/gpio/rpi/setup
+]' http://localhost:54331/hal/gpio/rpi/setup </pre>
 
+Response example
+<pre> 
+{
+    "successfully set up all pins" / 
+    "Error message" 
+}
+</pre>
+
+<pre> 
 curl -d '[
   {
       "number": 1,
@@ -85,16 +92,30 @@ curl -d '[
   }
 ]' http://localhost:54331/hal/gpio/rpi/setv
 </pre>
+
 Response example
 <pre> 
 {
-    "successfully set up all pins" / 
-    "Error message" 
-}
+    "1": "ok",
+    "3": "ok"
+} /
+{ "Error message" }
 </pre>
+
 #### Set values to GPIO channels (POST)
 Set values to GPIO channels
-<pre> http://localhost:54331/hal/gpio/rpi/setv </pre>
+<pre> 
+curl -d '[
+  {
+      "number": 1,
+      "value": "high"
+  },
+  {
+      "number": 3,
+      "value": "low"
+  }
+]' http://localhost:54331/hal/gpio/rpi/setv </pre>
+
 POST JSON example
 <pre> 
 [
@@ -108,6 +129,7 @@ POST JSON example
     }
 ]
 </pre>
+
 Response example
 <pre> 
 {
@@ -127,9 +149,8 @@ POST JSON example
 Response example
 <pre> 
 {
-    "17": "ok",
-    "5": "Error message",
-    "4": "ok"
+    "1": "ok",
+    "3": "ok"
 } /
 { "Error message" }
 </pre>
@@ -143,9 +164,8 @@ POST JSON example
 Response example
 <pre> 
 {
-    "17": 0,
-    "5": "Error message",
-    "4": 1
+    "1": 0,
+    "3": 1
 } /
 { "Error message" }
 </pre>
