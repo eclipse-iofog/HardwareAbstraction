@@ -12,7 +12,7 @@ As a part of HAL REST server it listens on port 54331 under 'gpio' path.
 This API will only work for RaspberryPi
 #### Set BCM mode (GET)
 Sets GPIO numbering to BCM mode 
-<pre> http://localhost:54331/hal/gpio/rpi/setmode/bcm </pre>
+<pre> curl http://localhost:54331/hal/gpio/rpi/setmode/bcm </pre>
 Response example
 <pre> 
 {
@@ -23,7 +23,7 @@ Response example
 </pre>
 #### Set BOARD mode (GET)
 Sets GPIO numbering to BOARD mode 
-<pre> http://localhost:54331/hal/gpio/rpi/setmode/board </pre>
+<pre> curl http://localhost:54331/hal/gpio/rpi/setmode/board </pre>
 Response example
 <pre> 
 {
@@ -34,7 +34,7 @@ Response example
 </pre>
 #### Clean-up GPIO channels (POST)
 Cleans up GPIO channels
-<pre> http://localhost:54331/hal/gpio/rpi/cleanup </pre>
+<pre> curl -d '{}' http://localhost:54331/hal/gpio/rpi/cleanup </pre>
 POST JSON example
 <pre> 
     [] - to clean-up all channels / 
@@ -52,29 +52,38 @@ Set up a list of GPIO channels (number and type properties are mandatory)
 <pre> http://localhost:54331/hal/gpio/rpi/setup </pre>
 POST JSON example
 <pre> 
-[
-    {   
-        "number": 1, 
-        "type": "out", 
-        "initial_value": "low", 
-        "pull_up_down": "up"
-    }, 
-    {
-        "number": 2, 
-        "type": "in", 
-        "initial_value": "high", 
-        "pull_up_down": "down"
-    }, 
-    {
-        "number": 3, 
-        "type": "out", 
-        "initial_value": "low"
-    }, 
-    {
-        "number": 4, 
-        "type": "out"
-    }
-]
+curl -d '[
+      {
+      "number": 1,
+      "type": "out",
+      "initial_value": "low"
+  },
+  {
+      "number": 2,
+      "type": "in",
+      "pull_up_down": "down"
+  },
+  {
+      "number": 3,
+      "type": "out",
+      "initial_value": "low"
+  },
+  {
+      "number": 4,
+      "type": "out"
+  }
+]' http://localhost:54331/hal/gpio/rpi/setup
+
+curl -d '[
+  {
+      "number": 1,
+      "value": "high"
+  },
+  {
+      "number": 3,
+      "value": "low"
+  }
+]' http://localhost:54331/hal/gpio/rpi/setv
 </pre>
 Response example
 <pre> 
@@ -109,8 +118,8 @@ Response example
 </pre>
 #### Set values to HIGH/LOW to GPIO channels (POST)
 Set values to HIGH/LOW to GPIO channels
-<pre> http://localhost:54331/hal/gpio/rpi/setv/high </pre>
-<pre> http://localhost:54331/hal/gpio/rpi/setv/low </pre>
+<pre> curl -d '[1,3]' http://localhost:54331/hal/gpio/rpi/setv/high </pre>
+<pre> curl -d '[1,3]' http://localhost:54331/hal/gpio/rpi/setv/low </pre>
 POST JSON example
 <pre> 
     [17, 5, 4] - list of channels to set up HIGH/LOW
@@ -126,7 +135,7 @@ Response example
 </pre>
 #### Get values of GPIO channels (POST)
 Get values of GPIO channels
-<pre> http://localhost:54331/hal/gpio/rpi/getv </pre>
+<pre> curl -d '[1,3]' http://localhost:54331/hal/gpio/rpi/getv </pre>
 POST JSON example
 <pre> 
     [17, 5, 4] - list of channels to read value from
